@@ -1,9 +1,11 @@
 // IMPORT
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-dotenv.config({ path: './../../config.env' });
+dotenv.config({ path: '/config.env' });
 const fs = require('fs');
-const Tour = require('./../../models/tourModel');
+
+// Import the specific mongoose Model
+const mongoModel = require('./../../models/mongoModel);
 
 // CREATE THE DATABASE AND SET PASSWORD FOR THE FROM THE ENVIRONMENT VARIABLES
 const DB = process.env.DATABASE.replace(
@@ -19,13 +21,13 @@ mongoose
   .then(() => console.log('DB connection successful!'));
 
 // READ JSON FILE AND PARSE/CONVERT THE DATA TO JAVASCRIPT OBJECT
-const tours = JSON.parse(fs.readFileSync('tours-simple.json', 'utf-8'));
+const data = JSON.parse(fs.readFileSync('data.json', 'utf-8'));
 
 // IMPORT DATA INTO DATABASE
 
 const importData = async () => {
   try {
-    await Tour.create(tours);
+    await mongoModel.create(data)
     console.log('Data successfully loaded!');
     process.exit();
   } catch (error) {
